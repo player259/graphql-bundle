@@ -1,34 +1,11 @@
 Player259GraphQLBundle
 ======================
 
-* :ref:`Installation`
-* :ref:`Configuration`
-* :ref:`Registering types`
-* :ref:`Lazy loading`
-* :ref:`Adding resolvers`
-* :ref:`Autowiring`
-* :ref:`Deffered resolving`
-
 About
 -----
 
 The Player259GraphQLBundle integrates `graphql-php <https://github.com/webonyx/graphql-php>`_ library
 into symfony applications.
-
-Features
---------
-
-* Types-as-services with Dependency Injection
-* Controller-like resolvers with Autowiring
-* Type definition and resolvers in the same class
-* No extra configuration files
-* No static calls
-* Native graphql-php type system with great `documentation <https://webonyx.github.io/graphql-php/>`_
-* Integrated TypeRegistry
-* Possible code splitting for Query and Mutation types
-* Simplified Deferred workflow with integrated buffer
-
-.. _Installation:
 
 Installation
 ------------
@@ -71,7 +48,7 @@ You can install the bundle using `Symfony Flex <https://symfony.com/doc/current/
             path: /graphql
             controller: Player259\GraphQLBundle\Controller\GraphQLController
 
-.. _Configuration:
+By default bundle registers ``/graphql`` endpoint.
 
 Configuration
 -------------
@@ -89,8 +66,6 @@ With ``debug`` option set to ``true`` response errors will contain ``debugMessag
 
 ``logger`` parameter is a service name to log exceptions.
 If it's prefixed with ``?`` it will not throw exception if no such service exists.
-
-.. _Registering types:
 
 Registering types
 -----------------
@@ -143,8 +118,6 @@ Type services use Framework Controller argument resolvers.
 This is achieved by tagging them with ``controller.service_arguments``.
 So if you have problems with autowiring resolvers, try adding this tag manually.
 
-.. _Lazy loading:
-
 Lazy loading
 ------------
 
@@ -190,8 +163,6 @@ It's highly recommended to use lazy loading for Type fields:
     }
 
 More information `here <http://webonyx.github.io/graphql-php/type-system/schema/#lazy-loading-of-types>`_.
-
-.. _Adding resolvers:
 
 Adding resolvers
 -----------------
@@ -315,8 +286,6 @@ For an object by public property or getter using ``symfony/property-access``.
 Only fields with different name should be overrided with own resolver method.
 So entity fields with the same name will be resolved automatically.
 
-.. _Autowiring:
-
 Autowiring
 ----------
 
@@ -340,8 +309,6 @@ are act as controllers. So each public method can be called with autowired argum
     public function field(User $user, array $args) {
         // ...
     }
-
-.. _Deffered resolving:
 
 Deffered resolving
 ------------------
@@ -408,8 +375,6 @@ Example:
             return $resolvedData[$args['id']] ?? null;
         }
     }
-
-.. _Code splitting:
 
 Code splitting
 --------------
@@ -483,8 +448,6 @@ There is a possibily of field name collision, plase take this into account.
 Also, during merging any extra options will be lost.
 Currently, only ``name``, ``description`` and ``fields`` are transferred into new type.
 
-.. _Not yet implemented:
-
 Not yet implemented
 -------------------
 
@@ -496,7 +459,7 @@ Allow to merge non-root types to get more flexibility.
 
 Maybe custom type config property ``resolveMethod`` to call specific method or another service.
 
-Another option is annotations, something like `@GraphQL\Resolve("App\GraphQL\QueryType", "users")`
+Another option is annotations, something like ``@GraphQL\Resolve("App\GraphQL\QueryType", "users")``
 so it could be attached to any service with public method.
 There will be no autowiring but it can be useful in some cases.
 

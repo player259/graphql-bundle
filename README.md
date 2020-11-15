@@ -57,6 +57,8 @@ player259_graphql_index:
     controller: Player259\GraphQLBundle\Controller\GraphQLController
 ```
 
+By default bundle registers `/graphql` endpoint.
+
 ## Configuration
 
 Default configuration in `config/packages/player259_graphql.yaml`.
@@ -72,6 +74,47 @@ With `debug` option set to `true` response errors will contain `debugMessage` an
 
 `logger` parameter is a service name to log exceptions.  
 If it's prefixed with `?` it will not throw exception if no such service exists.
+
+## Example
+
+To create your first GraphQL API (with default Symfony 5 installation and no configuration):
+
+1. Create class which extends webonyx `ObjectType` with name `Query`
+2. Add at least one field and resolver
+3. Make a request to `/graphql` url
+
+```php
+<?php
+
+namespace App\GraphQL;
+
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
+use Symfony\Component\Security\Core\Security;
+
+class QueryType extends ObjectType
+{
+    public function __construct()
+    {
+        $config = [
+            'name' => 'Query',
+            'fields' => [
+                'username' => [
+                    'type' => Type::string(),
+                    'description' => 'Current User username',
+                ],
+            ],
+        ];
+
+        parent::__construct($config);
+    }
+
+    public function resolveUsername(Security $security): ?string
+    {
+        return $security->getUser() ? $security->getUser()->getUsername() : null;
+    }
+}
+```
 
 ## Documentation
 
