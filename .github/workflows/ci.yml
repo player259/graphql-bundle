@@ -1,0 +1,38 @@
+name: CI
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    phpcs:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: ramsey/composer-install@v1
+            - run: vendor/bin/phpcs
+
+    phpunit:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php:
+                    - 7.1
+                    - 7.4
+                dependencies:
+                    - lowest
+                    - highest
+                include:
+                    - php: 8.0
+                      dependencies: highest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php }}
+            - uses: ramsey/composer-install@v1
+              with:
+                dependency-versions: ${{ matrix.dependencies }}
+            - run: vendor/bin/phpunit

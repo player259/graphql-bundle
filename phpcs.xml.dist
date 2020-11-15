@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="75"/>
+    <arg name="colors"/>
+    <arg name="encoding" value="utf-8"/>
+
+    <arg value="sp"/>
+
+    <file>.</file>
+    <exclude-pattern>vendor</exclude-pattern>
+
+    <config name="installed_paths" value="../../slevomat/coding-standard"/><!-- relative path from PHPCS source location -->
+
+    <rule ref="PSR2"/>
+
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>Tests/*</exclude-pattern>
+        <properties>
+            <property name="lineLimit" value="150"/>
+            <property name="absoluteLineLimit" value="200"/>
+            <property name="ignoreComments" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.Arrays">
+        <exclude name="Squiz.Arrays.ArrayDeclaration.KeyNotAligned"/>
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNotAligned"/>
+        <exclude name="Squiz.Arrays.ArrayDeclaration.CloseBraceNotAligned"/>
+        <exclude name="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed"/>
+        <exclude name="Squiz.Arrays.ArrayDeclaration.SingleLineNotAllowed"/>
+    </rule>
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <rule ref="Squiz.Classes"/>
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+
+    <rule ref="Generic.CodeAnalysis">
+        <type>error</type>
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/><!-- Doesn't work with overrided methods -->
+    </rule>
+
+    <rule ref="Squiz.PHP">
+        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
+        <exclude name="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison"/>
+        <exclude name="Squiz.PHP.DisallowComparisonAssignment.AssignedBool"/>
+        <exclude name="Squiz.PHP.DisallowInlineIf"/>
+        <exclude name="Squiz.PHP.Heredoc"/>
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments.Found"/><!-- Doesn't work with property hinting -->
+    </rule>
+    <rule ref="Squiz.PHP.DiscouragedFunctions">
+        <properties>
+            <property name="error" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Generic.PHP">
+        <exclude name="Generic.PHP.ClosingPHPTag"/>
+        <exclude name="Generic.PHP.UpperCaseConstant"/>
+    </rule>
+
+    <rule ref="Generic.Files">
+        <exclude name="Generic.Files.EndFileNoNewline"/>
+        <exclude name="Generic.Files.LowercasedFilename"/>
+    </rule>
+
+    <rule ref="Generic.Formatting">
+        <exclude name="Generic.Formatting.SpaceAfterNot"/>
+        <exclude name="Generic.Formatting.NoSpaceAfterCast"/>
+        <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+    </rule>
+
+    <rule ref="Squiz.Functions" />
+    <rule ref="Generic.Functions">
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+    </rule>
+
+    <rule ref="Generic.NamingConventions" />
+    <rule ref="Generic.NamingConventions.CamelCapsFunctionName">
+        <properties>
+            <property name="strict" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="Generic.Metrics" />
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <properties>
+            <property name="complexity" value="12" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.Strings">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    </rule>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Generic.Strings"/>
+
+    <rule ref="Squiz.Operators">
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue"/>
+    </rule>
+
+    <rule ref="Squiz.Scope" />
+
+    <rule ref="Squiz.WhiteSpace">
+        <exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
+        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
+        <exclude name="Squiz.Strings.ConcatenationSpacing.PaddingFound"/>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+            <property name="spacingAfterLast" value="0" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly" />
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="2" />
+            <property name="spacesCountAroundEqualsSign" value="0" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition" />
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace" />
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+        <type>warning</type>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch" />
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints" />
+    <rule ref="SlevomatCodingStandard.PHP.ShortList" />
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse" />
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash" />
+    <rule ref="Squiz.Commenting.VariableComment.Missing">
+      <severity>0</severity>
+    </rule>
+</ruleset>
