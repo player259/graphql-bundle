@@ -118,6 +118,92 @@ Type services use Framework Controller argument resolvers.
 This is achieved by tagging them with ``controller.service_arguments``.
 So if you have problems with autowiring resolvers, try adding this tag manually.
 
+Type Registry
+-------------
+
+All types which extend ``GraphQL\Type\Definition\NamedType`` are available in ``TypeRegistry``.
+
+For example, let's create scalar ``EmailType``:
+
+.. code-block :: php
+
+    <?php
+
+    declare(strict_types=1);
+
+    namespace App\GraphQL\ScalarType;
+
+    use GraphQL\Error\Error;
+    use GraphQL\Language\AST\StringValueNode;
+    use GraphQL\Type\Definition\ScalarType;
+    use GraphQL\Utils\Utils;
+
+    /**
+     * @see https://github.com/webonyx/graphql-php/blob/master/examples/01-blog/Blog/Type/Scalar/EmailType.php
+     */
+    class EmailType extends ScalarType
+    {
+        public function serialize($value)
+        {
+            return $value;
+        }
+
+        public function parseValue($value)
+        {
+            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                throw new \UnexpectedValueException('Cannot represent value as email: ' . Utils::printSafe($value));
+            }
+
+            return $value;
+        }
+
+        public function parseLiteral($valueNode, ?array $variables = null)
+        {
+            if (!$valueNode instanceof StringValueNode) {
+                throw new Error('Query error: Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
+            }
+            if (!filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {
+                throw new Error('Not a valid email', [$valueNode]);
+            }
+
+            return $valueNode->value;
+        }
+    }
+
+Then reference to it in another Type:
+
+.. code-block :: php
+
+    <?php
+
+    namespace App\GraphQL;
+
+    use App\GraphQL\ScalarType\EmailType;
+    use GraphQL\Type\Definition\ObjectType;
+    use Player259\GraphQLBundle\Service\TypeRegistry;
+
+    class QueryType extends ObjectType
+    {
+        public function __construct(TypeRegistry $typeRegistry)
+        {
+            $config = [
+                'name' => 'Query',
+                'fields' => static function() use ($typeRegistry) {
+                    return [
+                        'userEmail' => [
+                            'type' => $typeRegistry->get(EmailType::class),
+                        ],
+                    ];
+                },
+            ];
+
+            parent::__construct($config);
+        }
+    }
+
+Instead of ``ScalarType`` you can use ``ObjectType`` or ``InputObjectType``, whatever.
+You don't have to store instances in static properties, ``TypeRegistry`` do all necessary stuff.
+
 Lazy loading
 ------------
 
@@ -178,11 +264,36 @@ there can be resolver method named the same as field or prefixed with ``resolve`
 
 .. code-block :: php
 
-    public function someField() {
-        // ...
-    }
-    public function resolveSomeField() {
-        // ...
+    <?php
+
+    namespace App\GraphQL;
+
+    use GraphQL\Type\Definition\ObjectType;
+    use GraphQL\Type\Definition\Type;
+    use Player259\GraphQLBundle\Util\FieldResolverFactory;
+
+    class QueryType extends ObjectType
+    {
+        public function __construct()
+        {
+            $config = [
+                'name' => 'Query',
+                'fields' => [
+                    'someField' => Type::string(),
+                ],
+            ];
+
+            parent::__construct($config);
+        }
+
+        public function someField() {
+            // ...
+        }
+
+        // Or
+        public function resolveSomeField() {
+            // ...
+        }
     }
 
 Prefixed names are suitable for queries, e.g. ``resolveUsers``.
@@ -310,7 +421,7 @@ are act as controllers. So each public method can be called with autowired argum
         // ...
     }
 
-Deffered resolving
+Deferred resolving
 ------------------
 
 Types support native graphql-php Deferred using,
@@ -447,21 +558,6 @@ There is a possibily of field name collision, plase take this into account.
 
 Also, during merging any extra options will be lost.
 Currently, only ``name``, ``description`` and ``fields`` are transferred into new type.
-
-Not yet implemented
--------------------
-
-Pass execution rules, disabling introspection, query depth and complexity.
-
-Dispatching events to override server parameters such as promiseAdapter, error formatters and handlers.
-
-Allow to merge non-root types to get more flexibility.
-
-Maybe custom type config property ``resolveMethod`` to call specific method or another service.
-
-Another option is annotations, something like ``@GraphQL\Resolve("App\GraphQL\QueryType", "users")``
-so it could be attached to any service with public method.
-There will be no autowiring but it can be useful in some cases.
 
 License
 -------

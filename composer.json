@@ -1,6 +1,6 @@
 {
     "name": "player259/graphql-bundle",
-    "description": "Symfony GraphQL Bundle",
+    "description": "Lightweight Symfony GraphQL bundle over webonyx/graphql-php with DI and autowiring",
     "type": "symfony-bundle",
     "license": "MIT",
     "minimum-stability": "stable",
